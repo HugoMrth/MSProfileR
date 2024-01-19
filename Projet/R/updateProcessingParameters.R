@@ -1,0 +1,17 @@
+updateProcessingParameters <- function(session, input, values) {
+  updatePeakDetectionSpectra(values)
+  updateComputePeaksBySNRParams(session, input, values$updateParameters$computePeaksBySNRParams, values)
+  updateComputePeaksBySNR(values)
+  updateDetectPeaksParams(session, input, values$updateParameters$detectPeaksParams, values)
+  updateDetectPeaks(values)
+  updateComputeReferencePeaksParams(session, input, values$updateParameters$computeReferencePeaksParams, values)
+  updateComputeReferencePeaks(values)
+  updateAlignSpectraParams(session, input, values$updateParameters$alignSpectraParams, values)
+  updateAlignSpectra(values)
+  updateBinPeaksParams(session, input, values$updateParameters$binPeaksParams, values)
+  updateBinPeaks(values)
+  updateFilterPeaksParams(session, input, values$updateParameters$filterPeaksParams, values)
+  updateFilterPeaks(values)
+  updateComputeIntensityMatrixParams(session, input, values$updateParameters$computeIntensityMatrixParams, values)
+  updateComputeIntensityMatrix(values)
+}
