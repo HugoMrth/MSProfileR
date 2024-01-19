@@ -1,0 +1,14 @@
+---
+title: "MSProfileR report (data loading)"
+output: pdf_document
+params:
+  values: NA
+---
+
+```{asis, echo=!is.null(params$values$spectra)}
+# I. Data loading
+```
+
+```{r, echo=FALSE, results='asis', !is.null(params$values$spectra)}
+cat('- Number of spectra loaded: ', length(params$values$spectra), sep='')
+```
