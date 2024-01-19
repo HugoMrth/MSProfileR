@@ -1,0 +1,18 @@
+---
+title: "MSProfileR report"
+output: pdf_document
+params:
+  values: NA
+---
+
+```{r child = 'data_loading_report.Rmd'}
+```
+
+```{r child = 'preprocessing_report.Rmd'}
+```
+
+```{r child = 'processing_report.Rmd'}
+```
+
+```{r child = 'annotation_report.Rmd'}
+```

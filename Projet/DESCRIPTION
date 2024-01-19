@@ -1,0 +1,43 @@
+Package: MSProfileR
+Type: Package
+Title: MSProfileR
+Version: 0.1.1
+Authors@R: c(
+    person("Hugo", "Marthinet", email = "h.marthinet@gmail.com", role = "cre"),
+    person("Refka", "Ben Hamouda", email = "refkabenhamouda10@gmail.com", role = "aut")
+    )
+Maintainer: Hugo Marthinet <h.marthinet@gmail.com>
+Description: ...
+License: --------
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: MALDIquantForeign, 
+  MALDIrppa, 
+  MALDIquant, 
+  hdf5r, 
+  shiny, 
+  shinydashboard, 
+  shinyFiles, 
+  shinyWidgets,
+  shinyjs,
+  shinybusy,
+  DT,
+  ggplot2,
+  pheatmap,
+  rjson,
+  fontawesome,
+  shinyBS,
+  svglite,
+  zip,
+  readxl,
+  writexl,
+  tools,
+  knitr,
+  tinytex
+Author: Hugo Marthinet [cre],
+  Refka Ben Hamouda [aut]
+Suggests: knitr, rmarkdown
+VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)

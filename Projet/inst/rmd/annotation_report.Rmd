@@ -1,0 +1,18 @@
+---
+title: "MSProfileR report (annotations)"
+output: pdf_document
+params:
+  values: NA
+---
+
+```{asis, echo=!is.null(params$values$rawAnnotations)}
+# IV. Annotations
+```
+
+```{r, echo=FALSE, results='asis', eval=!is.null(params$values$annotationError)}
+cat('- ', params$values$annotationError, sep='')
+```
+
+```{r, echo=FALSE, eval=!is.null(params$values$annotationStatistics)}
+kable(params$values$annotationStatistics)
+```
