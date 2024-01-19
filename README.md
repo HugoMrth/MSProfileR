@@ -31,5 +31,5 @@ library(MSProfileR)
 #Access to the application guide
 browseVignettes(package = "MSProfileR")
 #Launch the App
-runMSProfileR( 
+runMSProfileR()
 ```
