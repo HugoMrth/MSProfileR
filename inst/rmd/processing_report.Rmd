@@ -1,0 +1,157 @@
+---
+title: "MSProfileR report (processing)"
+output: pdf_document
+params:
+  values: NA
+---
+
+```{r, echo=FALSE}
+require(ggplot2)
+library(ggplot2)
+require(knitr)
+library(knitr)
+require(MALDIquant)
+library(MALDIquant)
+require(pheatmap)
+library(pheatmap)
+```
+
+```{asis, echo=!isFALSE(params$values$computePeaksBySNRParams) | !isFALSE(params$values$detectPeaksParams)}
+# III. Processing
+## Peak detection
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$computePeaksBySNRParams) | !isFALSE(params$values$detectPeaksParams)}
+cat('### Parameters\n')
+if (!isFALSE(params$values$computePeaksBySNRParams)) {
+  noiseEstimatorMethod <- params$values$computePeaksBySNRParams$noiseEstimatorMethod
+  halfWindowSize <- params$values$computePeaksBySNRParams$halfWindowSize
+} else {
+  noiseEstimatorMethod <- params$values$detectPeaksParams$noiseEstimatorMethod
+  halfWindowSize <- params$values$detectPeaksParams$halfWindowSize
+}
+noiseEstimatorMethod <- switch(noiseEstimatorMethod, 
+       "MAD" = "MAD",  "SuperSmoother" = "Super smoother")
+cat('- Noise estimator method:', noiseEstimatorMethod, '\n')
+cat('- Half window size:', halfWindowSize, '\n')
+if (!isFALSE(params$values$detectPeaksParams)) {
+  cat('- SNR:', params$values$detectPeaksParams$SNR, '\n')
+}
+```
+
+```{asis, echo=!isFALSE(params$values$computePeaksBySNRParams) | !isFALSE(params$values$detectPeaksParams)}
+### Results
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$computePeaksBySNRParams)}
+boxplot(params$values$peakCountsBySNR)
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$computePeaksBySNRParams) && !isFALSE(params$values$detectPeaksParams)}
+SNR <- params$values$detectPeaksParams$SNR
+peakCounts <- params$values$peakCountsBySNR[[paste('SNR', SNR, sep=' ')]]
+peakCountMean <- mean(peakCounts)
+peakCountSd <- sd(peakCounts)
+cat(paste('Average number of peaks for SNR ', SNR, ': ', round(peakCountMean, 2), ' (sd: ', round(peakCountSd, 2), ')', sep=''))
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$detectPeaksParams)}
+plotSpectrumWithPeaks(params$values$peakDetectionSpectra[[1]], params$values$peaks[[1]])
+```
+
+```{asis, echo=!isFALSE(params$values$computeReferencePeaksParams)}
+## Spectrum alignment
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$computeReferencePeaksParams)}
+cat('### Parameters\n')
+referencePeaksMethod <- switch(params$values$computeReferencePeaksParams$referencePeaksMethod, 
+       "strict" = "Strict",  "relaxed" = "Relaxed")
+cat('- Method for reference peaks:', noiseEstimatorMethod, '\n')
+cat('- Minimum frenquency of reference peaks:', params$values$computeReferencePeaksParams$minFrequency, '\n')
+cat('- Tolerance for reference peaks:', params$values$computeReferencePeaksParams$referencePeaksTolerance, '\n')
+if (!isFALSE(params$values$alignSpectraParams)) {
+  alignmentWarpingMethod <- switch(params$values$alignSpectraParams$alignmentWarpingMethod, 
+       "lowess" = "Lowess", "linear" = "Linear", "quadratic" = "Quadratic", "cubic" = "Cubic")
+  cat('- Warping method for alignment:', alignmentWarpingMethod, '\n')
+}
+```
+
+```{asis, echo=!isFALSE(params$values$computeReferencePeaksParams)}
+### Results
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$computeReferencePeaksParams)}
+cat('- Number of reference peaks: ', length(params$values$referencePeaks), '\n')
+```
+
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$computeReferencePeaksParams)}
+plot(params$values$referencePeaks)
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$alignSpectraParams)}
+computeSpectraPheatmap(params$values$alignedSpectra)
+```
+
+```{asis, echo=!isFALSE(params$values$binPeaksParams)}
+## Peak binning
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$binPeaksParams)}
+cat('### Parameters\n')
+binPeaksMethod <- switch(params$values$binPeaksParams$binPeaksMethod, 
+       "strict" = "Strict",  "relaxed" = "Relaxed")
+cat('- Method for binning:', binPeaksMethod, '\n')
+cat('- Tolerance for reference binning:', params$values$binPeaksParams$binPeaksTolerance, '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$binPeaksParams)}
+### Results
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$binPeaksParams)}
+cat('Number of peaks:', computePeakCount(params$values$binnedPeaks), '\n')
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$binPeaksParams)}
+computeSpectraPheatmap(params$values$binnedPeaks)
+```
+
+```{asis, echo=!isFALSE(params$values$filterPeaksParams)}
+## Peak filtering
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$filterPeaksParams)}
+cat('### Parameters\n')
+cat('- Minimum frenquency:', params$values$filterPeaksParams$filterPeaksMinFrequency, '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$filterPeaksParams)}
+### Results
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$filterPeaksParams)}
+cat('Number of peaks:', computePeakCount(params$values$filteredPeaks), '\n')
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$filterPeaksParams)}
+computeSpectraPheatmap(params$values$filteredPeaks)
+```
+
+```{asis, echo=!isFALSE(params$values$computeIntensityMatrixParams)}
+## Intensity matrix
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$computeIntensityMatrixParams)}
+cat('### Parameters\n')
+cat('- Fill missing intensities using the aligned spectra:', if (params$values$computeIntensityMatrixParams$fillMissingValues) 'Yes' else 'No', '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$computeIntensityMatrixParams)}
+### Results
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$computeIntensityMatrixParams)}
+computeIntensityMatrixPheatmap(params$values$intensityMatrix, params$values$alignedSpectra, TRUE)
+```

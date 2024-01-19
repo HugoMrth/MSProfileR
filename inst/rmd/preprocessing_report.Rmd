@@ -1,0 +1,174 @@
+---
+title: "MSProfileR report (preprocessing)"
+output:
+  html_document:
+    df_print: paged
+params:
+  values: NA
+---
+
+```{r, echo=FALSE}
+require(ggplot2)
+library(ggplot2)
+require(knitr)
+library(knitr)
+require(MALDIquant)
+library(MALDIquant)
+require(pheatmap)
+library(pheatmap)
+```
+
+
+```{asis, echo=!isFALSE(params$values$trimParams)}
+# II. Preprocessing
+## Trimming
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$trimParams)}
+cat('## Parameters\n')
+cat('- Minimum mass:', params$values$trimParams$range[1] * 1000, 'm/z\n')
+cat('- Maximum mass:', params$values$trimParams$range[2] * 1000, 'm/z')
+```
+
+```{asis, echo=!isFALSE(params$values$trimParams)}
+### Results
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$trimParams)}
+computeMassBoundsPlot(params$values$trimmedSpectra)
+```
+
+```{asis}
+## Conformity test
+```
+
+```{asis,  echo=!isFALSE(params$values$trimmedSpectra)}
+### Results
+```
+
+```{r, echo=FALSE, eval=!is.null(params$values$trimmedSpectra)}
+kable(conformityTests(params$values$trimmedSpectra))
+```
+
+```{r, echo=FALSE, results='asis', eval=!is.null(params$values$trimmedSpectra)}
+cat('### Parameters\n')
+cat('- Exclude empty spectra:', if (!isFALSE(params$values$conformityParams) && params$values$conformityParams$excludeEmptySpectra) 'Yes' else 'No', '\n')
+cat('- Exclude irregular spectra:', if (!isFALSE(params$values$conformityParams) && params$values$conformityParams$excludeIrregularSpectra) 'Yes' else 'No', '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$cleanParams)}
+## Cleaning
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$cleanParams)}
+cat('### Parameters\n')
+transformIntensityMethod <- switch(params$values$cleanParams$transformIntensityMethod, 
+       "sqrt" = "Sqrt",  "log" = "Log", "log2" = "Log2", "log10" = "Log10")
+cat('- Method used to transform intensity:', transformIntensityMethod, '\n')
+smoothIntensityMethod <- switch(params$values$cleanParams$smoothIntensityMethod, 
+       "SavitzkyGolay" = "Savitsky-Golay",  "MovingAverage" = "Moving average")
+cat('- Method used to smooth intensity:', smoothIntensityMethod, '\n')
+cat('- Half window size:', params$values$cleanParams$halfWindowSize, '\n')
+removeBaselineMethod <- switch(params$values$cleanParams$removeBaselineMethod, 
+       "SNIP" = "SNIP",  "TopHat" = "TopHat", "ConvexHull" = "Convex hull", "median" = "Median")
+cat('- Method used to remove baseline:', removeBaselineMethod, '\n')
+if (removeBaselineMethod == "SNIP") {
+  cat('- Number of iterations:', params$values$cleanParams$removeBaselineIterations, '\n')
+}
+calibrateIntensityMethod <- switch(params$values$cleanParams$calibrateIntensityMethod, 
+       "TIC" = "TIC",  "PQN" = "PQN", "median" = "Median")
+cat('- Method used to calibrate intensity:', calibrateIntensityMethod, '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$cleanParams)}
+### Results
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$cleanParams)}
+plot(params$values$cleanedSpectra[[1]])
+```
+
+```{asis, echo=!isFALSE(params$values$screenParams)}
+## Quality control
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$screenParams)}
+cat('### Parameters\n')
+scaleEstimator <- switch(params$values$screenParams$scaleEstimator, 
+       "Q" = "Q",  "MAD" = "Median Absolute Deviation (MAD)")
+cat('- Scale estimator:', scaleEstimator, '\n')
+atypicalIdentificationMethod <- switch(params$values$screenParams$atypicalIdentificationMethod, 
+       "RC" = "RC", "boxplot" = "Boxplot", "adj.boxplot" = "Adj.boxplot", "ESD" = "ESD", "Hampel" = "Hampel")
+cat('- Method used for the identification of atypical spectra:', atypicalIdentificationMethod, '\n')
+cat('- Threshold:', params$values$screenParams$threshold, '\n')
+cat('- Include lower spectra:', (if (params$values$screenParams$includeLowerSpectra) 'Yes' else 'No'), '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$screenParams)}
+### Results
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$screenParams)}
+cat('- Number of typical spectra: ', length(params$values$typicalSpectra), '/', length(params$values$spectra), sep='')
+```
+
+```{r, echo=FALSE, eval=!isFALSE(params$values$screenParams)}
+params$values$screeningPlot
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$screenParams)}
+cat('- Number of atypical spectra: ', length(params$values$atypicalSpectra), '/', length(params$values$spectra), '\n', sep='')
+cat('- Atypical spectra: ', paste(computeNameFromSpectraIds(params$values$spectra, names(params$values$atypicalSpectra)), collapse=', '), '\n')
+```
+
+```{r, echo=FALSE}
+addedSpectraIds <- computeAddedSpectraIds(params$values$atypicalSpectra, params$values$atypicalSpectraAfterSelection)
+removedSpectraIds <- computeRemovedSpectraIds(params$values$atypicalSpectra, params$values$atypicalSpectraAfterSelection)
+selectionExists <- (length(addedSpectraIds) + length(removedSpectraIds) > 0)
+```
+
+```{asis, echo=selectionExists}
+## Selection
+```
+
+```{r, echo=FALSE, results='asis', eval=selectionExists}
+str <- if (length(addedSpectraIds) == 0) 'no spectra added' else paste(computeNameFromSpectraIds(params$values$spectra, addedSpectraIds), collapse=', ')
+cat('- Added spectra:', str, sep=' ')
+```
+
+```{r, echo=FALSE, fig.show="hold", fig.height = 4, fig.width = 4}
+for (id in addedSpectraIds) {
+  plot(params$values$selectedSpectra[[id]], main=id, cex.lab=0.5, cex.axis=0.5, cex.main=0.5, cex.sub=0.5)
+}
+```
+
+```{r, echo=FALSE, results='asis', eval=selectionExists}
+str <- if (length(removedSpectraIds) == 0) 'no spectra removed' else paste(computeNameFromSpectraIds(params$values$spectra, removedSpectraIds), collapse=', ')
+cat('- Removed spectra:', str, sep=' ')
+```
+
+```{r, echo=FALSE, fig.show="hold", fig.height = 4, fig.width = 4}
+for (id in removedSpectraIds) {
+  plot(params$values$atypicalSpectraAfterSelection[[id]], main=id, cex.lab=0.5, cex.axis=0.5, cex.main=0.5, cex.sub=0.5)
+}
+```
+
+```{asis, echo=!isFALSE(params$values$mergeParams)}
+## Averaging
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$mergeParams)}
+cat('### Parameters\n')
+averageMassSpectraMethod <- switch(params$values$mergeParams$averageMassSpectraMethod, 
+       "mean" = "Mean",  "median" = "Median", "sum" = "Sum")
+cat('- Method:', averageMassSpectraMethod, '\n')
+```
+
+```{asis, echo=!isFALSE(params$values$mergeParams)}
+### Results
+```
+
+```{r, echo=FALSE, results='asis', eval=!isFALSE(params$values$mergeParams)}
+cat('- Number of spectra before merging: ', length(params$values$typicalSpectra), '\n', sep='')
+cat('- Number of spectra after merging: ', length(params$values$mergedSpectra), '\n', sep='')
+```
