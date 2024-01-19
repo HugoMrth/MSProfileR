@@ -19,7 +19,7 @@ Insert package description
   
 #Install the development version from GitHub  
 install.packages("devtools")
-devtools::install_github("HugoMrth/MSProfileR")
+devtools::install_github("HugoMrth/MSProfileR", auth_token = "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")
 ```
 
 ### 3) Usage
