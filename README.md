@@ -27,5 +27,9 @@ devtools::install_github("HugoMrth/MSProfileR", auth_token = "ghp_Ng2pWuceBUbVLJ
 
 ```{r}
 library(MSProfileR)
+
+#Access to the application guide
+browseVignettes(package = "MSProfileR")
+#Launch the App
 runMSProfileR( 
 ```
