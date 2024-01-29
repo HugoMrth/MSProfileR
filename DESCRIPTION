@@ -33,8 +33,7 @@ Imports: MALDIquantForeign,
   readxl,
   writexl,
   tools,
-  knitr,
-  tinytex
+  knitr
 Author: Hugo Marthinet [cre],
   Refka Ben Hamouda [aut]
 Suggests: knitr, rmarkdown
