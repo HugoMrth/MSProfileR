@@ -25,7 +25,9 @@ runMSProfileR <- function() {
   )
 
   server <- function(input, output, session) {
-    values <- reactiveValues(newParams=list())
+    data(Legs_Guiana_Culex1)
+    values <- reactiveValues(newParams=list(),
+                             spectra = Legs_Guiana_Culex1)
     dataLoadingServer("data_loading", values)
     preprocessingServer("preprocessing", values)
     processingServer("processing", values)
@@ -35,13 +37,13 @@ runMSProfileR <- function() {
 
   app <- shinyApp(ui, server)
 
-  list.of.packages <- c("MALDIquantForeign", "MALDIrppa","MALDIquant","hdf5r","shiny","shinydashboard",
-                        "shinyFiles","shinyWidgets","shinyjs","shinybusy","DT","ggplot2","pheatmap","pandoc",
-                        "rjson","fontawesome","shinyBS","svglite","readxl","writexl","tools","knitr","tinytex")
-
-  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
-  if(length(new.packages)) install.packages(new.packages, repos='http://cran.us.r-project.org')
-  if (!tinytex::is_tinytex()) { tinytex::install_tinytex() }
+  # list.of.packages <- c("MALDIquantForeign", "MALDIrppa","MALDIquant","hdf5r","shiny","shinydashboard",
+  #                       "shinyFiles","shinyWidgets","shinyjs","shinybusy","DT","ggplot2","pheatmap","pandoc",
+  #                       "rjson","fontawesome","shinyBS","svglite","readxl","writexl","tools","knitr","tinytex")
+  #
+  # new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  # if(length(new.packages)) install.packages(new.packages, repos='http://cran.us.r-project.org')
+  # if (!tinytex::is_tinytex()) { tinytex::install_tinytex() }
 
 
   shiny::runApp(app,launch.browser = TRUE)
