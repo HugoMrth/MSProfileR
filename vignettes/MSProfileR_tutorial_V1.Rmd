@@ -1,0 +1,20 @@
+---
+title: "Using the MSProfileR App"
+author: "Refka Ben Hamouda"
+date: "05/05/2023"
+output:
+  pdf_document: default
+vignette: >
+  %\VignetteIndexEntry{Using the MSProfileR App}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+header-includes:
+- \usepackage{pdfpages}
+---
+
+\includepdf[pages=-, pagecommand={}]{PDF/MSProfileR_tutorial_V1.pdf}
+
+```{r, include=FALSE, echo=FALSE}
+#devtools::build_rmd("vignettes/MS-profileR_tutorial_V1.0.Rmd")
+```
+
