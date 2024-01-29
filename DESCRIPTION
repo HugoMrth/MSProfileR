@@ -33,10 +33,11 @@ Imports: MALDIquantForeign,
   readxl,
   writexl,
   tools,
-  knitr
+  knitr,
+  tinytex
 Author: Hugo Marthinet [cre],
   Refka Ben Hamouda [aut]
 Suggests: knitr, rmarkdown
-VignetteBuilder: knitr
+VignetteBuilder: knitr, rmarkdown
 Depends: 
     R (>= 2.10)
