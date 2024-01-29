@@ -21,11 +21,15 @@ Insert package description
 install.packages("devtools")
 
 #Install MSProfileR
-devtools::install_github("HugoMrth/MSProfileR", build_vignettes = TRUE)
+devtools::install_github("HugoMrth/MSProfileR", upgrade = "never", build_vignettes = TRUE)
+
+#Vignette installation may not work, in that case run the following :
+devtools::install_github("HugoMrth/MSProfileR", upgrade = "never")
+
+#R may recquire a session restart in order to properly run the App : Ctrl + Shift + F10
 ```
 
 ### 3) Usage
-
 
 ```{r}
 library(MSProfileR)
