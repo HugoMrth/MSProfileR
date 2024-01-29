@@ -33,7 +33,8 @@ Imports: MALDIquantForeign,
   readxl,
   writexl,
   tools,
-  knitr
+  knitr,
+  pandoc
 Author: Hugo Marthinet [cre],
   Refka Ben Hamouda [aut]
 Suggests: knitr, rmarkdown
