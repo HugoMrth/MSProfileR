@@ -3,7 +3,7 @@ title: "Using the MSProfileR App"
 author: "Refka Ben Hamouda"
 date: "05/05/2023"
 output:
-  html_document: default
+  pdf_document: default
 vignette: >
   %\VignetteIndexEntry{Using the MSProfileR App}
   %\VignetteEngine{knitr::rmarkdown}
