@@ -25,9 +25,9 @@ runMSProfileR <- function() {
   )
 
   server <- function(input, output, session) {
-    data(Legs_Guiana_Culex)
+    # data(Legs_Guiana_Culex)
     values <- reactiveValues(newParams=list(),
-                             spectra = Legs_Guiana_Culex)
+                             spectra = MSProfileR::Legs_Guiana_Culex)
     dataLoadingServer("data_loading", values)
     preprocessingServer("preprocessing", values)
     processingServer("processing", values)
