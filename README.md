@@ -1,41 +1,13 @@
-# {MSProfileR}
+# MSProfileR
 
-Application de traitement de spectres
+Spectra Processing Shiny App Package
   
   
 ***
   
   
-### 1) What is {MSProfileR}?
+### 1) Disclaimer
 
-Insert package description
+This is a work repo. Final version is available [here](https://github.com/Almeras-Lionel/MSProfileR).
 
-### 2) Installation
-
-```
-#Install from CRAN 
-#Not currently on CRAN
-
-  
-#Install the development version from GitHub  
-install.packages("devtools")
-
-#Install MSProfileR
-devtools::install_github("HugoMrth/MSProfileR", upgrade = "never", build_vignettes = TRUE)
-
-#Vignette installation may not work, in that case run the following :
-devtools::install_github("HugoMrth/MSProfileR", upgrade = "never")
-
-#R may recquire a session restart in order to properly run the App : Ctrl + Shift + F10
-```
-
-### 3) Usage
-
-```{r}
-library(MSProfileR)
-
-#Access to the application guide
-browseVignettes(package = "MSProfileR")
-#Launch the App
-runMSProfileR()
-```
+Associated publication is available [here](https://www.mdpi.com/2227-9709/11/2/39).
